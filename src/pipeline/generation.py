@@ -44,13 +44,13 @@ def generate_article_without_internet(api_params, llm):
 
 
     
-    template_without_internet = """You are an AI bot who helps users create different types of content, such as blog posts, product reviews, and more. Write an article of length {word_range} words with {sections} sections (H2, H3, H4) on the topic '{target_keyword}' including secondary keywords {secondary_keyword} in {tone} tone for a {country} audience in {language} language and {pov} point of view. Addiitonally create an outline, include FAQ and key takeaways if true respectively.
+    template_without_internet = """You are an AI bot who helps users create different types of content, such as blog posts, product reviews, and more. Write {article_type} article of length {word_range} words with {sections} sections (H2, H3, H4) on the topic '{target_keyword}' including secondary keywords {secondary_keyword} in {tone} tone for a {country} audience in {language} language and {pov} point of view. Addiitonally create an outline, include FAQ and key takeaways if true respectively.
     create_outline: {create_outline}, include_faq: {include_faq}, include_key_takeaways: {include_key_takeaways}."""
 
 
     prompt = PromptTemplate(template=template_without_internet, input_variables=list(api_params.keys()))
     llm_chain = LLMChain(llm=llm, prompt=prompt)
-    ans=llm_chain.run({"word_range": word_range, "sections": sections, "target_keyword": api_params["target_keyword"], "secondary_keyword": api_params["secondary_keyword"], "tone": api_params["tone"], "language": api_params["language"], "country": api_params["country"], "pov": api_params["pov"], "create_outline": api_params["create_outline"], "include_faq": api_params["include_faq"], "include_key_takeaways": api_params["include_key_takeaways"]})
+    ans=llm_chain.run({"article_type": api_params["article_type"], "word_range": word_range, "sections": sections, "target_keyword": api_params["target_keyword"], "secondary_keyword": api_params["secondary_keyword"], "tone": api_params["tone"], "language": api_params["language"], "country": api_params["country"], "pov": api_params["pov"], "create_outline": api_params["create_outline"], "include_faq": api_params["include_faq"], "include_key_takeaways": api_params["include_key_takeaways"]})
     print(num_tokens_from_string(ans, "cl100k_base"))
 
     list_image = []
@@ -64,11 +64,11 @@ def generate_article_without_internet(api_params, llm):
 def generate_article_with_internet(api_params, llm):
     selected_type = api_params["article_length"]
     sections, word_range = article_type_mapping[selected_type]["sections"], article_type_mapping[selected_type]["word_range"]
-    template_search = "Using the target keyword '{target_keyword}' and secondary keywords {secondary_keyword} write a single query for an internet search not more than 4 words."
+    template_search = "Using the target keyword '{target_keyword}' and secondary keywords {secondary_keyword} and article type {article_type} write a single query for an internet search not more than 4 words."
     # llm1 = OpenAIChat(temperature=0, model_name="gpt-3.5-turbo-0613", streaming=True)
     prompt_search = PromptTemplate(template=template_search, input_variables=["target_keyword", "secondary_keyword"])
     llm_chain_search = LLMChain(llm=llm, prompt=prompt_search)
-    search_context = llm_chain_search.run({"target_keyword": api_params["target_keyword"], "secondary_keyword": api_params["secondary_keyword"]})
+    search_context = llm_chain_search.run({"article_type": api_params["article_type"], "target_keyword": api_params["target_keyword"], "secondary_keyword": api_params["secondary_keyword"]})
 
     print(type(search_context))
 
@@ -98,7 +98,7 @@ def generate_article_with_internet(api_params, llm):
 if __name__ == "__main__":
     api_params = {
 "model_id": "gpt-4",
-"article_type": "new",
+"article_type": "tweet",
 "target_keyword": "abu dhabi",
 "secondary_keyword": ["abu dhabi weather", "abu dhabi attractions", "abu dhabi dining", "abu dhabi shopping", "abu dhabi culture"],
 "article_length": "shorter",

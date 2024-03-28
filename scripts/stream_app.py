@@ -50,7 +50,7 @@ if option == "Generation":
 
     # Define options for selectbox fields
     model_options = ["gpt-4-0125-preview", "gpt-3.5-turbo-0125"]  
-    article_type_options = ["new","rewrite"]
+    article_type_options = ["news report","tweet", "email"]
     article_length_options = ["shorter","short","medium", "long_form","longer"]
     tone_options = ["polite","SEO Optimized (confident, knowledgeable, neutral, and clear)","Excited" ,"Professional", "Friendly", "Formal", "Casual", "Humorous"]
     language_options = ["en", "Arabic"]  # Add more languages as needed
