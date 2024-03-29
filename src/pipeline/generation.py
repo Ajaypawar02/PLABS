@@ -29,7 +29,7 @@ os.environ["SERPER_API_KEY"] = os.getenv("SERPER_API_KEY")
 
 # Article type mapping
 article_type_mapping = {
-    "shorter": {"sections": (2, 3), "word_range": (450, 900)},
+    "very short": {"sections": (1, 1), "word_range": (50, 100)},
     "short": {"sections": (4, 5), "word_range": (900, 1350)},
     "medium": {"sections": (6, 7), "word_range": (1350, 1800)},
     "long_form": {"sections": (8, 9), "word_range": (1800, 2350)},
@@ -44,7 +44,7 @@ def generate_article_without_internet(api_params, llm):
 
 
     
-    template_without_internet = """You are an AI bot who helps users create different types of content, such as blog posts, product reviews, and more. Write {article_type} article of length {word_range} words with {sections} sections (H2, H3, H4) on the topic '{target_keyword}' including secondary keywords {secondary_keyword} in {tone} tone for a {country} audience in {language} language and {pov} point of view. Addiitonally create an outline, include FAQ and key takeaways if true respectively.
+    template_without_internet = """You are an AI bot who helps users create different types of content, such as tweets, news articles, blog post and more. Write {article_type} of length {word_range} words with {sections} sections (H2, H3, H4) on the topic '{target_keyword}' including secondary keywords {secondary_keyword} in {tone} tone for a {country} audience in {language} language and {pov} point of view. Addiitonally create an outline, include FAQ and key takeaways if true respectively.
     create_outline: {create_outline}, include_faq: {include_faq}, include_key_takeaways: {include_key_takeaways}."""
 
 
@@ -64,7 +64,7 @@ def generate_article_without_internet(api_params, llm):
 def generate_article_with_internet(api_params, llm):
     selected_type = api_params["article_length"]
     sections, word_range = article_type_mapping[selected_type]["sections"], article_type_mapping[selected_type]["word_range"]
-    template_search = "Using the target keyword '{target_keyword}' and secondary keywords {secondary_keyword} and article type {article_type} write a single query for an internet search not more than 4 words."
+    template_search = "Using the target keyword '{target_keyword}' and secondary keywords {secondary_keyword} write a single query for an internet search not more than 4 words."
     # llm1 = OpenAIChat(temperature=0, model_name="gpt-3.5-turbo-0613", streaming=True)
     prompt_search = PromptTemplate(template=template_search, input_variables=["target_keyword", "secondary_keyword"])
     llm_chain_search = LLMChain(llm=llm, prompt=prompt_search)

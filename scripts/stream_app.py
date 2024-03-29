@@ -51,7 +51,7 @@ if option == "Generation":
     # Define options for selectbox fields
     model_options = ["gpt-4-0125-preview", "gpt-3.5-turbo-0125"]  
     article_type_options = ["news report","tweet", "email"]
-    article_length_options = ["shorter","short","medium", "long_form","longer"]
+    article_length_options = ["very short","short","medium", "long_form","longer"]
     tone_options = ["polite","SEO Optimized (confident, knowledgeable, neutral, and clear)","Excited" ,"Professional", "Friendly", "Formal", "Casual", "Humorous"]
     language_options = ["en", "Arabic"]  # Add more languages as needed
     country_options = ["SA", "UAE"]  # Add more countries as needed
@@ -108,7 +108,7 @@ if option == "Generation":
             "text": result["answer"]
         }
         # Display response
-        st.write("Generated Article:")
+        st.write(f'Generated {article_type}')
         st.markdown(result["answer"]) 
         data_link = {
             "article" : result["answer"]
