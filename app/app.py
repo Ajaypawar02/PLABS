@@ -52,10 +52,7 @@ async def generate_article(request: Request, payload: GENERATIONPARAMETERS):
     data = json.loads(payload.json())
     
     use_internet = data.get('use_internet', False)
-    selected_type = data.get('article_length', 'short')
-    sections, word_range = article_type_mapping[selected_type]["sections"], article_type_mapping[selected_type]["word_range"]
     model_id = data.get('model_id', 'gpt-4')
-    length = data.get("article_length", "shorter")
 
 
 

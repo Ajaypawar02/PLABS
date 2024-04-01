@@ -51,71 +51,105 @@ if option == "Generation":
     # Define options for selectbox fields
     model_options = ["gpt-4-0125-preview", "gpt-3.5-turbo-0125"]  
     article_type_options = ["news report","tweet", "email"]
-    article_length_options = ["very short","short","medium", "long_form","longer"]
     tone_options = ["polite","SEO Optimized (confident, knowledgeable, neutral, and clear)","Excited" ,"Professional", "Friendly", "Formal", "Casual", "Humorous"]
-    language_options = ["en", "Arabic"]  # Add more languages as needed
-    country_options = ["SA", "UAE"]  # Add more countries as needed
-    pov_options = ["First Person Plural","First Person Singular","Second Person", "Third Person he, she it, ."]
+   
+    language_options = ["en", "Czech"]  # Add more languages as needed  # Add more countries as needed
+   
     # Input components for each field
     model_id = st.selectbox("Model ID", model_options)
     article_type = st.selectbox("Article Type", article_type_options)
-    target_keyword = st.text_input("Target Keyword", value="health")
-    secondary_keywords_input = st.text_input("Secondary Keywords (comma-separated)", value="")
-    secondary_keywords = [keyword.strip() for keyword in secondary_keywords_input.split(",") if keyword.strip()]
-
-    article_length = st.selectbox("Article Length", article_length_options)
     tone = st.selectbox("Tone", tone_options)
-    language = st.selectbox("Language", language_options)
-    country = st.selectbox("Country", country_options)
-    pov = st.selectbox("Point of View",pov_options)
-    use_internet = st.checkbox("Use Internet", value=False)
-    create_outline = st.checkbox("Create Outline", value=True)
-    include_faq = st.checkbox("Include FAQ", value=False)
-    include_key_takeaways = st.checkbox("Include Key Takeaways", value=True)
-    streaming = st.checkbox("Streaming", value=True)
-    auto_link = st.checkbox("Auto Link", value=False)
-    image = st.checkbox("Image", value=False)
-    # image = st.checkbox("Include Image", value=False)
-    
-    if st.button("Generate"):
-            # Prepare data based on user inputs
+    if article_type == "news report":
 
-            
+        Description = st.text_input("Description", value = "")
+
+        
+        language = st.selectbox("Language", language_options)
+        
+        use_internet = st.checkbox("Use Internet", value=False)
+        # create_outline = st.checkbox("Create Outline", value=True)
+        # include_faq = st.checkbox("Include FAQ", value=False)
+        # include_key_takeaways = st.checkbox("Include Key Takeaways", value=True)
+        # streaming = st.checkbox("Streaming", value=True)
+        # auto_link = st.checkbox("Auto Link", value=False)
+        # image = st.checkbox("Image", value=False)
+        # image = st.checkbox("Include Image", value=False)
+        
+        if st.button("Generate"):
+                # Prepare data based on user inputs
+
                 
-        data = {
-            "model_id": model_id,
-            "article_type": article_type,
-            "target_keyword": target_keyword,
-            "secondary_keyword": secondary_keywords,
-            "article_length": article_length,
-            "tone": tone,
-            "language": language,
-            "country": country,
-            "pov": pov,
-            "use_internet": use_internet,
-            "create_outline": create_outline,
-            "include_faq": include_faq,
-            "include_key_takeaways": include_key_takeaways,
-            "streaming": streaming,
-            "auto_link": auto_link,
-            "image": image
-        }
+                    
+            data = {
+                "model_id": model_id,
+                "article_type": article_type,
+                "Description": Description,
+                "tone": tone,
+                "language": language,
 
-    
-        # Call FastAPI endpoint
-        result = call_api(GENERATE_ARTICLE_URL, data)
-        data_image = {
-            "text": result["answer"]
-        }
-        # Display response
-        st.write(f'Generated {article_type}')
-        st.markdown(result["answer"]) 
-        data_link = {
-            "article" : result["answer"]
-        }
+                "use_internet": use_internet,
+                
+            }
+
+            print(data)
         
-        # st.markdown(image["image"])
+            # Call FastAPI endpoint
+            result = call_api(GENERATE_ARTICLE_URL, data)
+            data_image = {
+                "text": result["answer"]
+            }
+            # Display response
+            st.write(f'Generated {article_type}')
+            st.markdown(result["answer"]) 
+            data_link = {
+                "article" : result["answer"]
+            }
         
+    else:
+        Description = st.text_input("Description", value = "")
+
+        
+        language = st.selectbox("Language", language_options)
+            
+            # create_outline = st.checkbox("Create Outline", value=True)
+            # include_faq = st.checkbox("Include FAQ", value=False)
+            # include_key_takeaways = st.checkbox("Include Key Takeaways", value=True)
+            # streaming = st.checkbox("Streaming", value=True)
+            # auto_link = st.checkbox("Auto Link", value=False)
+            # image = st.checkbox("Image", value=False)
+            # image = st.checkbox("Include Image", value=False)
+            
+        if st.button("Generate"):
+                    # Prepare data based on user inputs
+
+                    
+                        
+            data = {
+                    "model_id": model_id,
+                    "article_type": article_type,
+                    "Description": Description,
+                    
+                    "language": language,
+
+                    "use_internet": False,
+                    
+                }
+
+            print(data)
+            
+                # Call FastAPI endpoint
+            result = call_api(GENERATE_ARTICLE_URL, data)
+            data_image = {
+                    "text": result["answer"]
+                }
+                # Display response
+            st.write(f'Generated {article_type}')
+            st.markdown(result["answer"]) 
+            data_link = {
+                    "article" : result["answer"]
+                }
+            # st.markdown(image["image"])
+            
         # display_base64_image(image["image"][0])
 
 if option == "Summarization":
