@@ -20,6 +20,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from src.pipeline.summarization import Summarization
 from langchain.llms import OpenAIChat
 from src.pipeline.generation import generate_article_without_internet, generate_article_with_internet, article_type_mapping
+from src.pipeline.ner import Ner
+from src.pipeline.sentiment_analysis import SentimentAnalysis
 from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
 from dotenv import load_dotenv
 from threading import Thread
@@ -75,6 +77,37 @@ async def generate_article(request: Request, payload: GENERATIONPARAMETERS):
     return result
 
 
+@app.post('/NER')
+async def NER(request: Request, payload: NERPARAMETERS):
+    try:
+        data = json.loads(payload.json())
+        comma_text = data["comma_text"]
+        text = data["text"]
+        model = data["model"]
+        print(text)
+        print(model)
+        ner = Ner(model)
+        response = ner.named_entity_description(comma_text, text)
+        return response
+    
+    except Exception as e:
+        return {"error": str(e)}
+
+@app.post('/sentiment_analysis')
+async def sentiment_analysis(request: Request, payload: SENTIMENTPARAMETERS):
+    try:
+        data = json.loads(payload.json())
+        input_text = data["text"]
+        model = data["model"]
+        print(input_text)
+        print(model)
+        sentiment = SentimentAnalysis(model)
+        response = sentiment.sentiment_analysis(input_text)
+        print(response)
+        return response
+    except Exception as e:
+        return {"error": str(e)}
+    
 handler = Mangum(app)
 
 if __name__ == "__main__":

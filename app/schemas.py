@@ -17,4 +17,12 @@ class GENERATIONPARAMETERS(BaseModel):
     language: str = Field(default="en", example="en")
     
     use_internet: bool = Field(default=False, example=False)
-    
+
+class NERPARAMETERS(BaseModel):
+    text: str
+    comma_text: str
+    model: str = Field(default="gpt-4", example="gpt-4")
+
+class SENTIMENTPARAMETERS(BaseModel):
+    text: str
+    model: str = Field(default="gpt-4", example="gpt-4")    

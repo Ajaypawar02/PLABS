@@ -6,8 +6,8 @@ import base64
 # Define FastAPI endpoint URLs
 GENERATE_ARTICLE_URL = "http://localhost:7000/generate_article"
 SUMMARIZATION_URL = "http://localhost:7000/generate_summary"
-
-
+NER_URL = "http://localhost:7000/NER"
+SENTIMENT_URL = "http://localhost:7000/sentiment_analysis"
 
 # Streamlit UI
 st.title("FastAPI Integration with Streamlit")
@@ -43,7 +43,7 @@ def display_base64_image(base64_str):
     st.image(image_bytes, use_column_width=True)
 
 # Streamlit components
-option = st.sidebar.selectbox("Select Action", ["Generation", "Summarization"])
+option = st.sidebar.selectbox("Select Action", ["Generation", "Summarization", "NER", "Sentiment Analysis"])
 
 if option == "Generation":
     st.subheader("Generate Article")
@@ -163,3 +163,28 @@ if option == "Summarization":
         result = call_api(SUMMARIZATION_URL, data)
         st.write("Response:")
         st.markdown(result['summary'])
+
+if option == "NER":
+    st.subheader("Named Entity Recognition")
+    text = st.text_area("Enter text")
+    comma_text = st.text_area("Enter comma separated text")
+    model_options = ["gpt-4-0125-preview", "gpt-3.5-turbo-0125"]  
+    model_id = st.selectbox("Model ID", model_options)
+
+    if st.button("Generate"):
+        data = {"model": model_id, "text": text, "comma_text": comma_text}
+        result = call_api(NER_URL, data)
+        st.write("Response:")
+        st.markdown(result['response'])
+
+if option == "Sentiment Analysis":
+    st.subheader("Sentiment Analysis")
+    model_options = ["gpt-4-0125-preview", "gpt-3.5-turbo-0125"]  
+    text = st.text_area("Enter text")
+    model_id = st.selectbox("Model ID", model_options)
+
+    if st.button("Generate"):
+        data = {"model": model_id, "text": text}
+        result = call_api(SENTIMENT_URL, data)
+        st.write("Response:")
+        st.markdown(result['response'])
