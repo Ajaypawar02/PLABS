@@ -22,6 +22,7 @@ from langchain.llms import OpenAIChat
 from src.pipeline.generation import generate_article_without_internet, generate_article_with_internet, article_type_mapping
 from src.pipeline.ner import Ner
 from src.pipeline.sentiment_analysis import SentimentAnalysis
+from src.pipeline.classification import Classification
 from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
 from dotenv import load_dotenv
 from threading import Thread
@@ -108,6 +109,22 @@ async def sentiment_analysis(request: Request, payload: SENTIMENTPARAMETERS):
     except Exception as e:
         return {"error": str(e)}
     
+@app.post('/classification')
+async def classification(request: Request, payload: CLASSIFICATIONPARAMETERS):
+    try:
+        data = json.loads(payload.json())
+        text = data["text"]
+        topic = data["topic"]
+        model = data["model"]
+        print(text)
+        print(topic)
+        print(model)
+        classification = Classification(model)
+        response = classification.classify(input_text=text, user_option= topic)
+        return response
+    except Exception as e:
+        return {"error": str(e)}
+
 handler = Mangum(app)
 
 if __name__ == "__main__":

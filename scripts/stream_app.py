@@ -8,7 +8,7 @@ GENERATE_ARTICLE_URL = "http://localhost:7000/generate_article"
 SUMMARIZATION_URL = "http://localhost:7000/generate_summary"
 NER_URL = "http://localhost:7000/NER"
 SENTIMENT_URL = "http://localhost:7000/sentiment_analysis"
-
+CLASSIFICATION_URL = "http://localhost:7000/classification"
 # Streamlit UI
 st.title("FastAPI Integration with Streamlit")
 
@@ -43,7 +43,7 @@ def display_base64_image(base64_str):
     st.image(image_bytes, use_column_width=True)
 
 # Streamlit components
-option = st.sidebar.selectbox("Select Action", ["Generation", "Summarization", "NER", "Sentiment Analysis"])
+option = st.sidebar.selectbox("Select Action", ["Generation", "Summarization", "NER", "Sentiment Analysis", "Classification"])
 
 if option == "Generation":
     st.subheader("Generate Article")
@@ -186,5 +186,19 @@ if option == "Sentiment Analysis":
     if st.button("Generate"):
         data = {"model": model_id, "text": text}
         result = call_api(SENTIMENT_URL, data)
+        st.write("Response:")
+        st.markdown(result['response'])
+
+if option == "Classification":
+    st.subheader("Classification")
+    text = st.text_area("Enter text")
+    model_options = ["gpt-4-0125-preview", "gpt-3.5-turbo-0125"]  
+    model_id = st.selectbox("Model ID", model_options)
+    topic_options = ["topic detection", "news", "sentiment analysis"]
+    topic = st.selectbox("Topic", topic_options)
+
+    if st.button("Generate"):
+        data = {"model": model_id, "text": text, "topic": topic}
+        result = call_api(CLASSIFICATION_URL, data)
         st.write("Response:")
         st.markdown(result['response'])

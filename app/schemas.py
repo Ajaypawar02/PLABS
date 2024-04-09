@@ -26,3 +26,8 @@ class NERPARAMETERS(BaseModel):
 class SENTIMENTPARAMETERS(BaseModel):
     text: str
     model: str = Field(default="gpt-4", example="gpt-4")    
+
+class CLASSIFICATIONPARAMETERS(BaseModel):
+    text: str
+    topic: str = Field(default="topic detection", example="topic detection")
+    model: str = Field(default="gpt-4", example="gpt-4")
